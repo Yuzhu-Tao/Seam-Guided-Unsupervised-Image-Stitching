@@ -1,4 +1,8 @@
-# Seam-Guided Unsupervised Image Stitching With Parallax-Aware Mask Generation
+<h1 align="center">Seam-Guided Unsupervised Image Stitching With Parallax-Aware Mask Generation</h1>
+
+<p align="center">
+  <img src="img.png" alt="Overview of parallax-aware warping and seam-guided alignment" width="100%">
+</p>
 
 The framework consists of two stages:
 
@@ -18,9 +22,7 @@ conda activate seam
 
 ### Dataset
 
-Download **input-data-UDIS.zip** from [Baidu Netdisk](https://pan.baidu.com/s/1AMI9FvWeYj4w9axpEtCCwg?pwd=whuf).
-
-Extraction code: `whuf`.
+Download **input-data-UDIS.zip** from [Baidu Netdisk](https://pan.baidu.com/s/1AMI9FvWeYj4w9axpEtCCwg?pwd=whuf). Extraction code: `whuf`.
 
 Extract the archive and set the training data path to the directory containing the paired `input1/` and `input2/` folders. See [Warp/readme.md](Warp/readme.md) for details.
 
@@ -39,9 +41,7 @@ python train.py --train_path /path/to/training/ --gpu 0
 
 ### Test on New_datasets
 
-The pre-trained model of Warp (`epoch100_model.pth`) is available at [Baidu Cloud](https://pan.baidu.com/s/1ngBykNcCrAWJbEhWTDa3ZQ?pwd=8ppg).
-
-Extraction code: `8ppg`.
+The pre-trained model of Warp (`epoch100_model.pth`) is available at [Baidu Cloud](https://pan.baidu.com/s/1ngBykNcCrAWJbEhWTDa3ZQ?pwd=8ppg). Extraction code: `8ppg`.
 
 ## Stage 2: Seam_composition
 
@@ -49,9 +49,7 @@ This stage performs seam-guided image composition and test-time optimization aft
 
 ### Pre-trained Model
 
-Seam_composition uses the same pre-trained Warp model (`epoch100_model.pth`) as Stage 1, available at [Baidu Cloud](https://pan.baidu.com/s/1ngBykNcCrAWJbEhWTDa3ZQ?pwd=8ppg).
-
-Extraction code: `8ppg`.
+Seam_composition uses the same pre-trained Warp model (`epoch100_model.pth`) as Stage 1, available at [Baidu Cloud](https://pan.baidu.com/s/1ngBykNcCrAWJbEhWTDa3ZQ?pwd=8ppg). Extraction code: `8ppg`.
 
 Place the downloaded model at `/amax/home/taoyz/Seam/Seam_composition/model/epoch100_model.pth`, or update the model path in the test scripts to match your local setup.
 
