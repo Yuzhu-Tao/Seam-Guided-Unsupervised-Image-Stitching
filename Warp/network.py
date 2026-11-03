@@ -152,32 +152,7 @@ def cpu_graphcut(batch_size,bomask1_list,bomask2_list,mk1_list,mk2_list,overlap_
                                 overlap_x_list[b].cpu().detach().numpy().item(), 
                                 norm_x_list[b].cpu().detach().numpy(),norm_y_list[b].cpu().detach().numpy())) for b in range(batch_size)]
 
-def kmeans_torch(X, num_clusters=2, num_iters=10):
-    # X: (N, 2), shape: 点的坐标
-    N = X.shape[0]
-    device = X.device
 
-    # 随机选初始中心点
-    indices = torch.randperm(N)[:num_clusters]
-    centers = X[indices]
-
-    for _ in range(num_iters):
-        # 计算每个点到中心点的距离
-        dists = torch.cdist(X, centers)  # (N, num_clusters)
-        labels = torch.argmin(dists, dim=1)
-
-        # 更新中心点
-        new_centers = []
-        for i in range(num_clusters):
-            cluster_points = X[labels == i]
-            if len(cluster_points) > 0:
-                new_centers.append(cluster_points.mean(dim=0))
-            else:
-                # 如果有空簇，就保留原来的中心
-                new_centers.append(centers[i])
-        centers = torch.stack(new_centers)
-
-    return labels
 
 def optimized_find_seam2(image, patch, mask1,mask2,flag=0):
     device=image.device
@@ -221,18 +196,7 @@ def optimized_find_seam2(image, patch, mask1,mask2,flag=0):
         bomask1=boundary_mask1[0,min_y_stack[b]:max_y_stack[b] + 1, min_x_stack[b]:max_x_stack[b] + 1]
         bomask2=boundary_mask2[0,min_y_stack[b]:max_y_stack[b] + 1, min_x_stack[b]:max_x_stack[b] + 1]
 
-        t=bomask1 * bomask2
-        #cv2.imwrite('bomask1.jpg',(bomask1*255).cpu().detach().numpy())
-        #cv2.imwrite('t.jpg',(t*255).cpu().detach().numpy())
-
-        pts = torch.nonzero(t > 0, as_tuple=False).float().to(t.device)  # shape (N, 2)
-        cluster_labels = kmeans_torch(pts, num_clusters=2)
-        start_pts = pts[cluster_labels == 0]
-        start_idx = start_pts[len(start_pts) // 2]
-
-        end_pts = pts[cluster_labels == 1]
-        end_idx = end_pts[len(end_pts) // 2]
-        print(start_idx,end_idx)
+        
 
         #exit()
         norm = (torch.abs(image_overlap - patch_overlap).float()/256 )#color,基础权重
@@ -1302,60 +1266,7 @@ def normMask(mask, strenth = 0.5):
     mask = torch.clamp(mask, 0, 1)
 
     return mask
-class RepConvN(nn.Module):
-    default_act = nn.ReLU(inplace=True)  # default activation
 
-    def __init__(self, inchannels, outchannels, kernel_size=3, stride=1, padding=1, groups=1, dilation=1, bias=False, act=False):
-        super().__init__()
-        assert (kernel_size == 3 or kernel_size == (3, 3)) and padding == 1
-        self.act = self.default_act if act is True else act if isinstance(act, nn.Module) else nn.Identity()
-
-        self.conv1 = nn.Conv2d(inchannels, outchannels, kernel_size, stride, 1, groups=groups, bias=False)
-        self.conv2 = nn.Conv2d(inchannels, outchannels, 1, stride, 0, groups=groups, bias=False)
-
-    def forward_fuse(self, x):
-        return self.act((self.conv(x)))
-
-    def forward(self, x):
-        return self.act((self.conv1(x) + self.conv2(x)))
-
-    def get_equivalent_kernel_bias(self):
-        """Returns equivalent kernel and bias by adding 3x3 kernel, 1x1 kernel and identity kernel with their biases."""
-        kernel3x3 = self.conv1.weight
-        kernel1x1 = self.conv2.weight
-        return kernel3x3 + self._pad_1x1_to_3x3_tensor(kernel1x1)
-
-    def _pad_1x1_to_3x3_tensor(self, kernel1x1):
-        """Pads a 1x1 tensor to a 3x3 tensor."""
-        if kernel1x1 is None:
-            return 0
-        else:
-            return F.pad(kernel1x1, [1, 1, 1, 1])  # (left, right, top, bottom)
-
-    def fuse_convs(self):
-        """Combines two convolution layers into a single layer and removes unused attributes from the class."""
-        if hasattr(self, 'conv'):
-            return
-        kernel = self.get_equivalent_kernel_bias()
-        self.conv = nn.Conv2d(in_channels=self.conv1.in_channels,
-                              out_channels=self.conv1.out_channels,
-                              kernel_size=self.conv1.kernel_size,
-                              stride=self.conv1.stride,
-                              padding=self.conv1.padding,
-                              dilation=self.conv1.dilation,
-                              groups=self.conv1.groups,
-                              bias=False).requires_grad_(False)
-        self.conv.weight.data = kernel
-        for para in self.parameters():
-            para.detach_()
-        self.__delattr__('conv1')
-        self.__delattr__('conv2')
-        if hasattr(self, 'nm'):
-            self.__delattr__('nm')
-        if hasattr(self, 'bn'):
-            self.__delattr__('bn')
-        if hasattr(self, 'id_tensor'):
-            self.__delattr__('id_tensor')
 # define and forward
 class Network(nn.Module):
 

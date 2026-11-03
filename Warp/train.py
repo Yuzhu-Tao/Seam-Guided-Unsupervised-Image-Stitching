@@ -7,16 +7,16 @@ from torch.utils.tensorboard import SummaryWriter
 from network import build_model, Network
 from dataset import TrainDataset
 import glob
-from loss import cal_lp_loss,my_seam_loss, inter_grid_loss, intra_grid_loss
+from loss import cal_lp_loss,inter_grid_loss, intra_grid_loss
 
 
 
 last_path = os.path.abspath(os.path.join(os.path.dirname("__file__"), os.path.pardir))
 # path to save the summary files
-SUMMARY_DIR = os.path.join(last_path, 'summary_new_final_2_crop_edge_loss_bn')
+SUMMARY_DIR = os.path.join(last_path, 'summary')
 writer = SummaryWriter(log_dir=SUMMARY_DIR)
 # path to save the model files
-MODEL_DIR = os.path.join(last_path, 'model_new_final_2_crop_edge_loss_bn')
+MODEL_DIR = os.path.join(last_path, 'model')
 # create folders if it dose not exist
 if not os.path.exists(MODEL_DIR):
     os.makedirs(MODEL_DIR)
@@ -115,13 +115,7 @@ def train(args):
             mask1=batch_out['mask1']
             mask2=batch_out['mask2']
            
-            #print(mask1.mean())
-            # colored1= cv2.applyColorMap((mask1[0,0]*255).cpu().detach().numpy().clip(0,255).astype(np.uint8), cv2.COLORMAP_JET) 
-            # cv2.imwrite('mk1.jpg',colored1)
-            # calculate loss for overlapping regions
-            #current_iter=epoch*len(train_loader)+i
-            #mask_weight=max(0.01,0.1*(1-current_iter/total_iter))
-            #print(mask_weight)
+          
             overlap_loss = cal_lp_loss(inpu1_tesnor, inpu2_tesnor, output_H, output_H_inv, warp_mesh, warp_mesh_mask,mask1,mask2)
             # calculate loss for non-overlapping regions
 
