@@ -43,7 +43,7 @@ python train.py --train_path /path/to/training/ --gpu 0
 
 ### Test on New_datasets
 
-The pre-trained model of Warp (`epoch100_model.pth`) is available at [Baidu Cloud](https://pan.baidu.com/s/1ngBykNcCrAWJbEhWTDa3ZQ?pwd=8ppg). Extraction code: `8ppg`.
+The pre-trained model of Warp (`epoch100_model.pth`) is available at [Baidu Cloud](https://pan.baidu.com/s/1OU5Ihqp5knEtrPh45af7bA?pwd=pay1). Extraction code: `pay1`.
 
 ## Stage 2: Seam_composition
 
@@ -51,7 +51,7 @@ This stage performs seam-guided image composition and test-time optimization aft
 
 ### Pre-trained Model
 
-Seam_composition uses the same pre-trained Warp model (`epoch100_model.pth`) as Stage 1, available at [Baidu Cloud](https://pan.baidu.com/s/1ngBykNcCrAWJbEhWTDa3ZQ?pwd=8ppg). Extraction code: `8ppg`.
+Seam_composition uses the same pre-trained Warp model (`epoch100_model.pth`) as Stage 1, available at [Baidu Cloud](https://pan.baidu.com/s/1OU5Ihqp5knEtrPh45af7bA?pwd=pay1). Extraction code: `pay1`.
 
 Place the downloaded model at `/amax/home/taoyz/Seam/Seam_composition/model/epoch100_model.pth`, or update the model path in the test scripts to match your local setup.
 
