@@ -22,7 +22,7 @@ conda activate seam
 
 ### Dataset
 
-Download **input-data-UDIS.zip** from [Baidu Netdisk](https://pan.baidu.com/s/1AMI9FvWeYj4w9axpEtCCwg?pwd=whuf). Extraction code: `whuf`.
+
 
 Extract the archive and set the training data path to the directory containing the paired `input1/` and `input2/` folders. See [Warp/readme.md](Warp/readme.md) for details.
 
