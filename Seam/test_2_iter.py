@@ -40,15 +40,13 @@ def loadSingleData(data_path, img1_name, img2_name):
 
 
 # path of project
-#nl: os.path.dirname("__file__") ----- the current absolute path
-#nl: os.path.pardir ---- the last path
+
 last_path = os.path.abspath(os.path.join(os.path.dirname("__file__"), os.path.pardir))
 
 
-#nl: path to save the model files
 MODEL_DIR = os.path.join(last_path, 'model')
 
-#nl: create folders if it dose not exist
+
 if not os.path.exists(MODEL_DIR):
     os.makedirs(MODEL_DIR)
 
@@ -66,10 +64,7 @@ def train(args):
     if torch.cuda.is_available():
         net = net.cuda()
     
-    # for param in net.SAMNet.parameters():
-    #     param.requires_grad=False
     
-    # define the optimizer and learning rate
     optimizer = optim.Adam(net.parameters(), lr=5e-4, betas=(0.9, 0.999), eps=1e-08)  # default as 0.0001
     scheduler = optim.lr_scheduler.ExponentialLR(optimizer, gamma=0.97)
 
@@ -80,11 +75,6 @@ def train(args):
         #model_path = ckpt_list[-1]
         model_path='/amax/home/taoyz/Seam/Warp/model/epoch100_model.pth'
         checkpoint = torch.load(model_path)
-        #net_dict=net.state_dict()#当前模型的参数
-
-        #n_checkpoint={k:v for k,v in checkpoint.items() if k in net_dict}#过滤掉在预训练模型中不存在的key
-
-        #net_dict.update(n_checkpoint)
 
 
         net.load_state_dict(checkpoint['model'])
@@ -102,7 +92,7 @@ def train(args):
 
     # load dataset(only one pair of images)
     input1_tensor, input2_tensor = loadSingleData(data_path=args.path, img1_name = args.img1_name, img2_name = args.img2_name)
-    #print(input1_tensor.shape)
+
     if torch.cuda.is_available():
         input1_tensor = input1_tensor.cuda()
         input2_tensor = input2_tensor.cuda()
@@ -134,7 +124,6 @@ def train(args):
         seam=out['seam']
         
         total_loss = cal_lp_loss2_cut_warp(input1_tensor_512,output_H,output_H_inv,mask1,mask2,warp_mesh,warp_mesh2,warp_mesh_mask,seam)
-        #total_loss = cal_lp_loss2_cut(output_H,output_H_inv,input1_tensor_512, input2_tensor_512,warp_mesh,warp_mesh2, warp_mesh_mask,mask1,mask2,vgg_warp_input2_features_list,vgg_warp_mesh_features)
         total_loss.backward()
         # clip the gradient
         torch.nn.utils.clip_grad_norm_(net.parameters(), max_norm=3, norm_type=2)
@@ -213,7 +202,7 @@ if __name__=="__main__":
     #nl: add arguments
     parser.add_argument('--gpu', type=str, default='3')
     parser.add_argument('--max_iter', type=int, default=50)
-    parser.add_argument('--path', type=str, default='/amax/home/taoyz/UDIS2-main/Warp2/Codes/parallax/2_2/3_new_final_2_crop_20_seam/')
+    parser.add_argument('--path', type=str, default='/amax/home/taoyz/Seam/Warp/data/')
     parser.add_argument('--img1_name', type=str, default='01.jpg')
     parser.add_argument('--img2_name', type=str, default='02.jpg')
 

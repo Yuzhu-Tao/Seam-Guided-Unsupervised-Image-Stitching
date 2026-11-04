@@ -67,8 +67,6 @@ def find_boundary(mask):
    
     x = F.conv2d(1-mask2,weight,stride=1,padding=1)
     x = torch.where(x < 1, zeros, ones)
-    x = F.conv2d(x,weight,stride=1,padding=1)
-    x = torch.where(x < 1, zeros, ones)
     # x = F.conv2d(x,weight,stride=1,padding=1)
     # x = torch.where(x < 1, zeros, ones)
     # x = F.conv2d(x,weight,stride=1,padding=1)

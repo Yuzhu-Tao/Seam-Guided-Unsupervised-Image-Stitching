@@ -6,54 +6,10 @@
 
 The framework consists of two stages:
 
-1. **Warp:** Unsupervised image warping with parallax-aware mask generation. See [Warp/readme.md](Warp/readme.md) for dataset preparation and training instructions.
-2. **Seam_composition:** Seam-guided image composition and test-time optimization. The implementation is available in [Seam_composition/](Seam_composition/).
+1. **Warp training:** Learn parallax-aware masks to guide image warping while preserving natural content.
+2. **Seam-guided alignment:** Refine local alignment around the estimated seam for up to 50 iterations, with early stopping when the loss stabilizes.
 
-## Environment Setup
-
-Create and activate the Conda environment from the repository root:
-
-```bash
-conda env create -f requirement.yml
-conda activate seam
-```
-
-## Stage 1: Warp
-
-### Dataset
-
-Train: [Baidu Netdisk](https://pan.baidu.com/s/1kI0yxoYp89yzWXGN7PdN1g?pwd=q4ff), code: `q4ff`.
-
-Test: [Baidu Netdisk](https://pan.baidu.com/s/1135E4umtqJC1iw4JW53jvw?pwd=pa7h), code: `pa7h`.
-
-Extract the archive and set the training data path to the directory containing the paired `input1/` and `input2/` folders. See [Warp/readme.md](Warp/readme.md) for details.
-
-### Training
-
-```bash
-cd Warp
-python train.py
-```
-
-To use a different dataset location or GPU:
-
-```bash
-python train.py --train_path /path/to/training/ --gpu 0
-```
-
-### Test on New_datasets
-
-The pre-trained Warp model `epoch100_model.pth` is available at [Baidu Cloud](https://pan.baidu.com/s/1OU5Ihqp5knEtrPh45af7bA?pwd=pay1). Extraction code: `pay1`.
-
-## Stage 2: Seam_composition
-
-This stage performs seam-guided image composition and test-time optimization after image warping. The implementation is available in [Seam_composition/](Seam_composition/).
-
-### Pre-trained Model
-
-Seam_composition uses the same pre-trained Warp model `epoch100_model.pth` as Stage 1, available at [Baidu Cloud](https://pan.baidu.com/s/1OU5Ihqp5knEtrPh45af7bA?pwd=pay1). Extraction code: `pay1`.
-
-Place the downloaded model at `/amax/home/taoyz/Seam/Seam_composition/model/epoch100_model.pth`, or update the model path in the test scripts to match your local setup.
+See [Seam/readme.md](Seam/readme.md) for dataset and pre-trained model downloads, environment setup, and training and testing instructions.
 
 ## Citation
 

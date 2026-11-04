@@ -39,16 +39,12 @@ def loadSingleData(data_path, img1_name, img2_name):
 
 
 
-# path of project
-#nl: os.path.dirname("__file__") ----- the current absolute path
-#nl: os.path.pardir ---- the last path
+
 last_path = os.path.abspath(os.path.join(os.path.dirname("__file__"), os.path.pardir))
 
-
-#nl: path to save the model files
 MODEL_DIR = os.path.join(last_path, 'model')
 
-#nl: create folders if it dose not exist
+
 if not os.path.exists(MODEL_DIR):
     os.makedirs(MODEL_DIR)
 
@@ -65,7 +61,6 @@ def test(args):
         net = net.cuda()
     
     
-    
 
     #load the existing models if it exists
     ckpt_list = glob.glob(MODEL_DIR + "/*.pth")
@@ -75,8 +70,6 @@ def test(args):
         model_path='/amax/home/taoyz/Seam/Warp/model/epoch100_model.pth'
         checkpoint = torch.load(model_path)
         #net_dict=net.state_dict()#当前模型的参数
-
-        #n_checkpoint={k:v for k,v in checkpoint.items() if k in net_dict}#过滤掉在预训练模型中不存在的key
 
         #net_dict.update(n_checkpoint)
 
@@ -102,7 +95,6 @@ def test(args):
     input1_tensor_512 = resize_512(input1_tensor)
     input2_tensor_512 = resize_512(input2_tensor)
 
-    loss_list = []
 
     print("##################start test#######################")
     net.eval()
@@ -155,7 +147,7 @@ if __name__=="__main__":
     #nl: add arguments
     parser.add_argument('--gpu', type=str, default='7')
     parser.add_argument('--max_iter', type=int, default=50)
-    parser.add_argument('--path', type=str, default='/amax/home/taoyz/UDIS2-main/Warp2/data/DW_graph/final/1/2_final_data_20/')
+    parser.add_argument('--path', type=str, default='/amax/home/taoyz/Seam/Warp/data/')
     parser.add_argument('--img1_name', type=str, default='01.jpg')
     parser.add_argument('--img2_name', type=str, default='02.jpg')
 

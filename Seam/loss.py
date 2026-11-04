@@ -58,10 +58,7 @@ def masked_L1_loss(img1, img2, mask):
     
     masked_abs_diff = torch.abs(mask * img1 - mask * img2)  # 计算 masked 区域的 L1 误差
     valid_pixel_count = torch.sum(mask>0)  # 计算 mask 有效区域的像素数量（非零部分）
-    #cv2.imwrite('ms.jpg',((masked_abs_diff+1)*127.5)[0].cpu().detach().numpy().transpose(1,2,0))
-    # 避免除以零（当mask全为0时）
-    # if valid_pixel_count == 0:
-    #     return torch.tensor(0.0, device=mask.device)
+
     
     return torch.sum(masked_abs_diff) / valid_pixel_count
 
@@ -71,22 +68,7 @@ def masked_max_loss(img1, img2, mask):
     
     return torch.max(masked_abs_diff)+torch.min(masked_abs_diff)
 
-# #DP
-# def my_seam_loss(input1, input2, output_H, output_H_inv, warp_mesh, warp_mesh_mask):
 
-#     batch_size, _, img_h, img_w = input1.size()
-
-#     delta3 = ( torch.sum(warp_mesh, [2,3])  -   torch.sum(input1*warp_mesh_mask, [2,3]) ) /  torch.sum(warp_mesh_mask, [2,3])
-#     input1_newbalance = input1 + delta3.unsqueeze(2).unsqueeze(3).expand(-1, -1, img_h, img_w)
-    
-#     mask1=torch.ones_like(input1_newbalance)
-#     C1,start1,end1=optimized_find_seam(input1_newbalance, warp_mesh,mask1,warp_mesh_mask)
-#     maskc1 = generate_mask(C1, input1_newbalance,start1,end1)  
-
-
-#     seam_loss=masked_L1_loss(input1_newbalance,warp_mesh,maskc1)
-
-#     return seam_loss
 #triplet_loss = nn.TripletMarginLoss(margin=0.5, p=1, reduce=False,size_average=False)
 def cal_lp_loss(input1, input2, output_H, output_H_inv, warp_mesh, warp_mesh_mask,mask1,mask2):
     batch_size, _, img_h, img_w = input1.size()
@@ -189,8 +171,7 @@ def cal_lp_loss2_cut(output_H,output_H_inv,input1, input2,warp_mesh, warp_mesh2,
     input1_mask=torch.ones_like(input1)
     m1,m2,seam=optimized_find_seam(input1, warp_mesh2,input1_mask,warp_mesh_mask,1)
     maskc1=(dilate_mask(seam).expand(-1,3,-1,-1))
-        # compute_mask_loss_new(input1_newbalance*warp_mesh_mask,warp_mesh,warp_mesh_mask,l_num=1,lambda_reg=10)
-        # m_f=getmask(warp_mesh_mask[:,0,:,:].unsqueeze(1))
+
     lp_loss_4 =5*masked_L1_loss(input1,warp_mesh2,maskc1)
     
    
@@ -199,23 +180,14 @@ def cal_lp_loss2_cut(output_H,output_H_inv,input1, input2,warp_mesh, warp_mesh2,
 def cal_lp_loss2_cut_warp(input1,output_H,output_H_inv,mask1,mask2,warp_mesh,warp_mesh2,warp_mesh_mask,seam):
 
 
-    
-    
-
     maskc1=(dilate_mask(seam).expand(-1,3,-1,-1))
-    #cv2.imwrite('maskc1.jpg',((maskc1)*255)[0].cpu().detach().numpy().transpose(1,2,0))
 
    # dil_seam=dilate_seam((seam).expand(-1,3,-1,-1))
     maskc1=maskc1*warp_mesh_mask
     
-
-    #cv2.imwrite('ins.jpg',((ins+1)*127.5)[0].cpu().detach().numpy().transpose(1,2,0))
-
-    #cv2.imwrite('was.jpg',((was+1)*127.5)[0].cpu().detach().numpy().transpose(1,2,0))
     
     lp_loss_4 =1*masked_L1_loss(input1,warp_mesh2,maskc1)
    
-    # cv2.imwrite('i2.jpg',(warp_mesh2*maskc1*127.5)[0].cpu().detach().numpy().transpose(1,2,0))
     # 纹理对齐
     grad_x1,grad_y1=compute_sobel_edge(input1,maskc1[:,0,:,:])
     grad_x2,grad_y2=compute_sobel_edge(warp_mesh2,maskc1[:,0,:,:])
