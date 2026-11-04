@@ -22,7 +22,7 @@ conda activate seam
 
 ### Dataset
 
-
+Download **New_dataset** (`testing.zip`) from [Baidu Netdisk](https://pan.baidu.com/s/1135E4umtqJC1iw4JW53jvw?pwd=pa7h). Extraction code: `pa7h`.
 
 Extract the archive and set the training data path to the directory containing the paired `input1/` and `input2/` folders. See [Warp/readme.md](Warp/readme.md) for details.
 
