@@ -11,6 +11,10 @@ The framework consists of two stages:
 
 See [Seam/readme.md](Seam/readme.md) for dataset and pre-trained model downloads, environment setup, and training and testing instructions.
 
+## Evaluation / 测试指标
+
+For seam-quality metrics and the three evaluation scripts, see [测试指标/README.md](测试指标/README.md). 测试指标及三个 test 脚本的用途、配置和运行方式，请进入该目录查看。
+
 ## Citation
 
 ```bibtex
