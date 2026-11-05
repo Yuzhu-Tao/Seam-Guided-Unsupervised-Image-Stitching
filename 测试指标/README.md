@@ -10,6 +10,12 @@ Compute seam-local quality metrics before and after test-time optimization. See 
 | `test_2_iter_one.py` | Optimize a single image pair and report seam-quality metrics, iteration time, and GPU memory usage. |
 | `test_2_iter_mul.py` | Optimize multiple image pairs from paired `input1/` and `input2/` folders and report per-pair and average metrics. |
 
+## Pre-trained Model
+
+All three test scripts use the same pre-trained model as `Seam/`: `epoch100_model.pth`. No separate evaluation model is required. See [Seam: Pre-trained Model](../Seam/readme.md#pre-trained-model) for the download link.
+
+Set `model_path` in all three scripts to this checkpoint. The before-optimization script performs direct inference; the iterative scripts start from the same checkpoint and refine the network for each image pair. Keep the complete checkpoint, including optimizer state, for iterative optimization.
+
 ## Setup
 
 Use the same environment as `Seam/`, with `scikit-image` installed. Update `model_path` in all three scripts to the downloaded `epoch100_model.pth`. Iterative scripts also require the checkpoint optimizer state.
