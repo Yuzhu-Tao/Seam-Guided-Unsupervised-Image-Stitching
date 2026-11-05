@@ -1,1 +1,8 @@
 /Seam_composition/
+
+# Local evaluation artifacts
+/测试指标/model/
+/测试指标/summary/
+/测试指标/read.md
+/测试指标/**/__pycache__/
+/测试指标/**/*.pyc
